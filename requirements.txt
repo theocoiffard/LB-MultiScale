@@ -1,0 +1,6 @@
+numpy==2.0.2
+matplotlib==3.9.4
+pandas==2.3.2
+streamlit==1.49.1
+porespy==2.4.1
+tqdm==4.67.1
