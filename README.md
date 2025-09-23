@@ -1,33 +1,58 @@
-# 🌀 LB-WBS : Lattice Boltzmann for Heterogeneous Porous Media
+# 🌀 LB-WBS: Lattice Boltzmann for Heterogeneous Porous Media
 
-Ce projet implémente un **schéma Lattice Boltzmann (LB-WBS)** pour la simulation d’écoulements dans des milieux poreux hétérogènes, avec dépendance en pression.
+This project implements a **Lattice Boltzmann (LB-WBS) scheme** for simulating flows in heterogeneous porous media with pressure dependence.
 
-## 📂 Contenu du projet
+## 📂 Project structure
 
-- `LB_WBS.py` : Implémentation du schéma LB-WBS.  
-- `PorousMedia.py` : Génération de matrices poreuses hétérogènes.  
-- `extractJSON.py` : Lecture et extraction des paramètres à partir de fichiers `.json`.  
-- `utils.py` : Fonctions utilitaires (affichage, paramètres, etc.).  
-- `media_json/` : Répertoire contenant des fichiers `.json` décrivant les propriétés des couches poreuses.  
-- `main.py` (exemple) : Script principal illustrant l’utilisation du schéma LB-WBS.  
+- `streamlit run Assist_WBS.py`: Streamlit interface to **set up LB-WBS parameters** and **save them into a JSON file** describing the porous medium.  
+- `streamlit run Reader_JSON.py`: Streamlit interface to **read and visualize** the content of a JSON file.  
+- `LB_WBS.py`: Implementation of the LB-WBS scheme.  
+- `PorousMedia.py`: Generation of heterogeneous porous matrices.  
+- `extractJSON.py`: Reading and extracting parameters from `.json` files.  
+- `utils.py`: Utility functions (visualization, parameter handling, etc.).  
+- `media_json/`: Directory containing `.json` files describing porous layer properties.  
+- `main.py`: Full example script illustrating how to use the LB-WBS scheme.  
+- `_JSON_impermeable/`: Scripts to generate JSON files describing **impermeable properties**.  
 
-## ⚙️ Dépendances
+## ⚙️ Requirements
 
-Installer les bibliothèques nécessaires (testé avec Python 3.9) :  
+Install the required dependencies (tested with **Python 3.9**):  
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## 🚀 Exemple d’exécution
+## 🚀 Example run
+
+Run the main script:  
 
 ```bash
 python main.py
 ```
 
-Ce script :  
-1. Génère une matrice poreuse à plusieurs couches.  
-2. Extrait les paramètres des fichiers `.json`.  
-3. Construit le modèle LB-WBS avec dépendance en pression.  
-4. Lance la simulation jusqu’à convergence.  
-5. Affiche la magnitude du champ de vitesse.
+This script will:  
+1. Generate a porous matrix with multiple layers.  
+2. Extract parameters from the `.json` files.  
+3. Build the LB-WBS model with pressure dependence.  
+4. Run the simulation until convergence.  
+5. Display the **velocity magnitude field** with `matplotlib`.  
+
+## 🖥️ Streamlit interfaces
+
+Two graphical interfaces are provided to make the project easier to use:  
+
+### 🔧 Parameter setup and JSON generation
+```bash
+streamlit run Assist_WBS.py
+```
+This interface allows you to:  
+- Configure the LB-WBS scheme parameters.  
+- Save them into a **JSON** file describing the porous medium.  
+
+### 📑 JSON reading and visualization
+```bash
+streamlit run Reader_JSON.py
+```
+This interface allows you to:  
+- Load an existing **JSON** file.  
+- Visualize its parameters and associated properties.  
