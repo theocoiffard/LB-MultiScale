@@ -1,0 +1,8 @@
+@misc{Coiffard2025LBMultiScale,
+  author       = {Coiffard, Théo},
+  title        = {LB-MultiScale: Multiscale Lattice Boltzmann Methods for Porous Media},
+  year         = {2025},
+  howpublished = {\url{https://github.com/theocoiffard/LB-MultiScale}},
+  version      = {0.1.0},
+  institution  = {Laboratoire Mathématiques, Image et Applications (MIA), La Rochelle Université, France}
+}
