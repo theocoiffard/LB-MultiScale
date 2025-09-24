@@ -55,8 +55,8 @@ class PressureDependanceModel():
         self.xi = XI
         self.gamma = GAMMA_FIELD
 
-        self.right_bc = 'No slip' # or 'Free slip'
-        self.left_bc = 'No slip' # or 'Free slip'
+        self.right_bc = 'No slip'
+        self.left_bc = 'No slip'
 
         self.streaming_model = 'WBS'
 
@@ -84,11 +84,6 @@ class PressureDependanceModel():
         # momentum components
         self.u = np.sum(self.fprop[:, :, [0, 4, 7]], axis=2) - np.sum(self.fprop[:, :, [2, 5, 6]], axis=2)
         self.v = np.sum(self.fprop[:, :, [1, 4, 5]], axis=2) - np.sum(self.fprop[:, :, [3, 6, 7]], axis=2)
-
-    # def equilibrium(self):
-    #     for k in range(NPOP):
-    #         # Compute equilibrium distribution (linear equilibrium with incompressible model)
-    #         self.feq[:, :, k] = w[k] * (self.rho + 1 / self.lattice_sound_speed ** 2 * (self.u * cx[k]) + 1 / self.lattice_sound_speed ** 2 * (self.v * cy[k]))
 
     def equilibrium(self):
         u2 = self.u ** 2 + self.v ** 2
