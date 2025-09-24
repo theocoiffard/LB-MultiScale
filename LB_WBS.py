@@ -8,130 +8,8 @@ NPOP = 9  # number of velocities
 w = np.array([1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 36, 1 / 36, 1 / 36, 1 / 36,4/9])  # weights
 cx = np.array([1, 0, -1, 0, 1, -1, -1, 1,0])  # velocities, x components
 cy = np.array([0, 1, 0, -1, 1, 1, -1, -1,0])  # velocities, y components
-# Précalcul des indices spéculaires
 
 
-def adj_flow_dir(k):
-    if k==0:
-        return (7,4)#7
-    if k ==1:
-        return 4#(4,5)
-    elif k ==2:
-        return (5,6)#6
-    elif k ==3:
-        return 7#(6,7)
-    elif k ==4:
-        return 0#0
-    elif k ==5:
-        return 1#2
-    elif k==6:
-        return 3#4
-    elif k ==7:
-        return 0#4
-    elif k==8:
-        return 8
-
-# def adj_flow_dir(k):
-#     if k==0:
-#         return (7,4)#7
-#     if k ==1:
-#         return 4#(4,5)
-#     elif k ==2:
-#         return (5,6)#6
-#     elif k ==3:
-#         return 7#(6,7)
-#     elif k ==4:
-#         return 0#0
-#     elif k ==5:
-#         return 1#2
-#     elif k==6:
-#         return 3#4
-#     elif k ==7:
-#         return 0#4
-#     elif k==8:
-#         return 8
-def adj_plus_bis(k):
-    if k == 0:
-        return 7
-    elif k == 1:
-        return 4
-    elif k == 2:
-        return 6
-    elif k == 3:
-        return 7
-    elif k == 4:
-        return 0
-    elif k == 5:
-        return 2
-    elif k == 6:
-        return 3
-    elif k == 7:
-        return 3
-    elif k == 8:
-        return 8
-
-def adj_minus_bis(k):
-    if k == 0:
-        return 4
-    elif k == 1:
-        return 5
-    elif k == 2:
-        return 5
-    elif k == 3:
-        return 6
-    elif k == 4:
-        return 1
-    elif k == 5:
-        return 1
-    elif k == 6:
-        return 2
-    elif k == 7:
-        return 0
-    elif k == 8:
-        return 8
-
-
-
-
-def adj_plus(k):
-    if k == 0:
-        return 4
-    elif k == 1:
-        return 5
-    elif k == 2:
-        return 6
-    elif k == 3:
-        return 7
-    elif k == 4:
-        return 1
-    elif k == 5:
-        return 2
-    elif k == 6:
-        return 3
-    elif k == 7:
-        return 0
-    elif k == 8:
-        return 8
-
-def adj_minus(k):
-    if k == 0:
-        return 7
-    elif k == 1:
-        return 4
-    elif k == 2:
-        return 5
-    elif k == 3:
-        return 6
-    elif k == 4:
-        return 0
-    elif k == 5:
-        return 1
-    elif k == 6:
-        return 2
-    elif k == 7:
-        return 3
-    elif k == 8:
-        return 8
 def opposite(k):
     if k == 0:
         return 2
@@ -151,13 +29,6 @@ def opposite(k):
         return 5
     elif k == 8:
         return 8
-
-# print('PLus')
-# for k in range(9):
-#     print('{} : {}'.format(k,opposite(adj_plus(k))))
-# print('Minus')
-# for k in range(9):
-#     print('{} : {}'.format(k,opposite(adj_minus(k))))
 
 class PressureDependanceModel():
     def __init__(self, THETA_FIELD,GAMMA_FIELD, XI, NX,NY, RHO_IN, RHO_OUT, CS):
@@ -184,6 +55,13 @@ class PressureDependanceModel():
         self.xi = XI
         self.gamma = GAMMA_FIELD
 
+        self.right_bc = 'No slip' # or 'Free slip'
+        self.left_bc = 'No slip' # or 'Free slip'
+
+        self.streaming_model = 'WBS'
+
+
+        self.maximum_of_iteration = 20000
 
     def initilisation(self, RHO0, UX0, UY0):
         self.feq = np.zeros((self.NX, self.NY, NPOP))
@@ -207,12 +85,12 @@ class PressureDependanceModel():
         self.u = np.sum(self.fprop[:, :, [0, 4, 7]], axis=2) - np.sum(self.fprop[:, :, [2, 5, 6]], axis=2)
         self.v = np.sum(self.fprop[:, :, [1, 4, 5]], axis=2) - np.sum(self.fprop[:, :, [3, 6, 7]], axis=2)
 
-    def equilibrium(self):
-        for k in range(NPOP):
-            # Compute equilibrium distribution (linear equilibrium with incompressible model)
-            self.feq[:, :, k] = w[k] * (self.rho + 1 / self.lattice_sound_speed ** 2 * (self.u * cx[k]) + 1 / self.lattice_sound_speed ** 2 * (self.v * cy[k]))
+    # def equilibrium(self):
+    #     for k in range(NPOP):
+    #         # Compute equilibrium distribution (linear equilibrium with incompressible model)
+    #         self.feq[:, :, k] = w[k] * (self.rho + 1 / self.lattice_sound_speed ** 2 * (self.u * cx[k]) + 1 / self.lattice_sound_speed ** 2 * (self.v * cy[k]))
 
-    def equilibrium2(self):
+    def equilibrium(self):
         u2 = self.u ** 2 + self.v ** 2
         for k in range(NPOP):
             cu = cx[k] * self.u + cy[k] * self.v
@@ -231,63 +109,56 @@ class PressureDependanceModel():
         for k in range(NPOP):
             self.f[0, :, k] = w[k] * ( self.rho_in + 1 / self.lattice_sound_speed ** 2 * (cx[k] * self.u[a, :]) + 1 / self.lattice_sound_speed **2* (cy[k] * self.v[a, :])) + (self.f[a, :, k] - self.feq[a, :, k])
             self.f[-1, :, k] = w[k] * (self.rho_out + 1 / self.lattice_sound_speed ** 2 * (cx[k] * self.u[b, :]) + 1 / self.lattice_sound_speed **2 *(cy[k] * self.v[b, :])) + (self.f[b, :, k] - self.feq[b, :, k])
-    def streaming(self, type):
-        if type == 'WBS':
+    def streaming(self):
+        if self.streaming_model == 'WBS':
             for k in range(NPOP):
                 self.fprop[:, :, k] = np.roll(self.f[:, :, k], (cx[k], cy[k]), axis=(0, 1)) + np.roll(self.theta,(cx[k], cy[k]),axis=(0, 1)) * (np.roll(self.fprecoll[:, :, opposite(k)], (cx[k], cy[k]),axis=(0, 1)) - np.roll(self.f[:, :, k], (cx[k], cy[k]), axis=(0, 1)))
-        elif type == 'YH':
+        elif self.streaming_model == 'ZM':
             for k in range(NPOP):
                 self.fprop[:, :, k] = np.roll(self.f[:, :, k], (cx[k], cy[k]), axis=(0, 1)) + np.roll(self.theta,(cx[k], cy[k]),axis=(0, 1)) * (np.roll(self.f[:, :, opposite(k)], (cx[k], cy[k]),axis=(0, 1)) - np.roll(self.f[:, :, k], (cx[k], cy[k]), axis=(0, 1)))
         else :
-            print('Choose a scheme : type_streaming= WBS or YH ')
-    def right_BoundaryCondition(self, which = 'No slip'):
-        if which == 'No slip':
+            print("Choose a scheme : type_streaming= 'WBS' or 'YH' ")
+    def right_BoundaryCondition(self):
+        if self.right_bc == 'No slip':
             self.fprop[:, -1, 3] = self.f[:, -1, 1]
             self.fprop[:, -1, 6] = self.f[:, -1, 4]
             self.fprop[:, -1, 7] = self.f[:, -1, 5]
-        elif which == "Free slip":
+        elif self.right_bc== "Free slip":
             self.fprop[:, -1, 3] = self.f[:, -1, 1]
             self.fprop[:, -1, 6] = self.f[:, -1, 5]
             self.fprop[:, -1, 7] = self.f[:, -1, 4]
 
-    def left_BoundaryCondition(self, which='No Slip'):
+        else: print("Affect a boundary condition on the right boundary: model.right_bc = 'No slip' or 'Free slip'")
+
+    def left_BoundaryCondition(self):
         # Bottom wall (rest)
-        if which =='No slip':
+        if self.left_bc =='No slip':
             self.fprop[:, 0, 1] = self.f[:, 0, 3]
             self.fprop[:, 0, 4] = self.f[:, 0, 6]
             self.fprop[:, 0, 5] = self.f[:, 0, 7]
-        elif which =='Free slip':
+        elif self.left_bc =='Free slip':
             # Bottom wall (rest)
             self.fprop[:, 0, 1] = self.f[:, 0, 3]
             self.fprop[:, 0, 4] = self.f[:, 0, 7]
             self.fprop[:, 0, 5] = self.f[:, 0, 6]
+        else: print("Affect a boundary condition on the left boundary: model.left_bc = 'No slip' or 'Free slip'")
 
-
-    def run_scheme_until_convergence(self, itemax=100000, type_streaming=None):
-        import tqdm
-        import numpy as np
-
-        for i in tqdm.tqdm(range(itemax)):
+    def run(self):
+        for i in tqdm.tqdm(range(self.maximum_of_iteration)):
             self.equilibrium()
             self.pre_collision()
             self.collision()
             self.pressure_topAndBottom_BoundaryCondition()
-            self.streaming(type=type_streaming)
-            self.right_BoundaryCondition(which='No slip')
-            self.left_BoundaryCondition(which='No slip')
+            self.streaming()
+            self.right_BoundaryCondition()
+            self.left_BoundaryCondition()
             self.macro()
 
-            # if i%1000==0:
-            #     plt.clf()
-            #     # plt.imshow(self.u**2+self.v**2, cmap='jet')
-            #     plt.plot(np.sqrt(self.u**2+self.v**2)[45,:])
-            #     plt.pause(0.01)
             # Vérification NaN
             if np.isnan(self.u).any() or np.isnan(self.v).any():
                 print(f"NaN détecté à l'étape {i} — arrêt de la simulation.")
-                return "NaN"
 
-        return "Done"
+        print(f'End of simulation after {self.maximum_of_iteration} iterations of the {self.streaming_model} scheme')
 
 
 def relaxation_time_matrix2(sv, sj, nx):

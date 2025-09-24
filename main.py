@@ -7,9 +7,6 @@ import utils
 
 
 #An exemple to compute LB-WBS scheme in heterogeneous permeable media
-
-
-
 NX=200
 NY=200
 
@@ -38,7 +35,7 @@ value_gamma= [0]*number_of_layers #non linear term
 
 utils.show_porous_media_and_LB_paramters(porous_media, multi_porous, gamma_value=value_gamma)
 
-
+######## Pre-procesing step
 ## Parameters for LB-WBS model based on pressure dependance flow
 RHO_OUT=float(multi_porous[0]['adimensionne']['rho_out'])
 RHO0= RHO_OUT
@@ -70,13 +67,20 @@ model = LB.PressureDependanceModel(THETA_FIELD=THETA_FIELD,
                                      CS=CS,
                                    )
 
+# End pre-processing step
 
-ite_max=2000
+ite_max=2000 #maximum of iteration
 
-model.initilisation(RHO0=RHO0, UX0=0, UY0=0)
-# save.LB_parameters(porous_media,lb_parameters=multi_porous, gamma_value=value_gamma, base_output_dir=output_directory)
-comment = model.run_scheme_until_convergence(itemax=ite_max, type_streaming='WBS')
-print(comment)
+model.initilisation(RHO0=RHO0, UX0=0, UY0=0) #initialization of the model
+
+model.right_bc = 'No slip'
+model.left_bc = 'No slip'
+
+model.streaming_model ='WBS'
+model.maximum_of_iteration = 2000
+
+model.run()
+
 magnitude = np.sqrt(model.u**2+model.v**2)
 fig, ax = plt.subplots(1,1, figsize=(6,5))
 
