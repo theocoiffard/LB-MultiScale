@@ -139,10 +139,16 @@ with col2:
     p_in_ref = p_out_ref + delta_p_ref
     rho_in_ref = p_in_ref / cs_adi**2
 
-    delta_p_adi = 8 * mu_adi * u_adi / L_adi
-    p_out_adi = rho_adi * cs_adi**2
-    p_in_adi = p_out_adi + delta_p_adi
-    rho_in_adi = p_in_adi / cs_adi**2
+    # delta_p_adi = 8 * mu_adi * u_adi / L_adi
+    # p_out_adi = rho_adi * cs_adi**2
+    # p_in_adi = p_out_adi + delta_p_adi
+    # rho_in_adi = p_in_adi / cs_adi**2
+
+    delta_p_adi = 8*mu_adi*1
+    rho_out_adi = 1
+    p_out_adi= rho_out_adi*cs_adi**2
+    p_in_adi = p_out_adi+delta_p_adi
+    rho_in_adi = p_in_adi/cs_adi**2
 
     # === Darcy velocity ===
     u_Darcy = (k_physic / mu_physic) * (delta_p / L_physic)
@@ -164,7 +170,7 @@ with col2:
         ],
         "No dimension": [
             rho_adi, u_adi, k_adi, mu_adi, L_adi, dx_adi, dt_adi,
-            delta_p_adi, rho_adi, p_out_adi, p_in_adi, rho_in_adi, u_Darcy_adi, phi, Nx, c_slider
+            delta_p_adi, rho_out_adi, p_out_adi, p_in_adi, rho_in_adi, u_Darcy_adi, phi, Nx, c_slider
         ]
     }
 

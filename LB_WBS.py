@@ -148,7 +148,10 @@ class PressureDependanceModel():
             self.right_BoundaryCondition()
             self.left_BoundaryCondition()
             self.macro()
-
+            if i%100==0:
+                plt.clf()
+                plt.plot(np.sqrt(self.u[40,:]**2+self.v[40,:]**2))
+                plt.pause(0.1)
             # Vérification NaN
             if np.isnan(self.u).any() or np.isnan(self.v).any():
                 print(f"NaN détecté à l'étape {i} — arrêt de la simulation.")
