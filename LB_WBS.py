@@ -89,7 +89,7 @@ class PressureDependanceModel():
         u2 = self.u ** 2 + self.v ** 2
         for k in range(NPOP):
             cu = cx[k] * self.u + cy[k] * self.v
-            self.feq[:, :, k] = w[k]  * (self.rho + (cu / self.lattice_sound_speed**2) +self.gamma*( (0.5 * (cu ** 2) / self.lattice_sound_speed**2) - (0.5 * u2 / self.lattice_sound_speed**2)))
+            self.feq[:, :, k] = w[k]  * (self.rho + (cu / self.lattice_sound_speed**2) +self.gamma*( (0.5 * (cu ** 2) / self.lattice_sound_speed**4) - (0.5 * u2 / self.lattice_sound_speed**2)))
 
     def pre_collision(self):
         self.fprecoll = self.fprop.copy()
@@ -148,10 +148,11 @@ class PressureDependanceModel():
             self.right_BoundaryCondition()
             self.left_BoundaryCondition()
             self.macro()
-            if i%100==0:
-                plt.clf()
-                plt.plot(np.sqrt(self.u[40,:]**2+self.v[40,:]**2))
-                plt.pause(0.1)
+            # if i%5==0:
+            #     plt.clf()
+            #     # plt.plot(np.sqrt(self.u[40,:]**2+self.v[40,:]**2))
+            #     plt.imshow(np.sqrt(self.u**2+self.v**2), cmap='jet')
+            #     plt.pause(0.1)
             # Vérification NaN
             if np.isnan(self.u).any() or np.isnan(self.v).any():
                 print(f"NaN détecté à l'étape {i} — arrêt de la simulation.")
