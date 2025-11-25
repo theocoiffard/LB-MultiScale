@@ -1,0 +1,117 @@
+{
+  "physicals": {
+    "Variables": [
+      "rho",
+      "u",
+      "k",
+      "mu",
+      "L",
+      "dx",
+      "dt",
+      "delta_p",
+      "rho_out",
+      "p_out",
+      "p_in",
+      "rho_in",
+      "u_Darcy",
+      "phi"
+    ],
+    "Physical": [
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None"
+    ],
+    "Reference": [
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None"
+    ],
+    "No dimension": [
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None",
+      "None"
+    ]
+  },
+  "adimensional_numbers": {
+    "Number": [
+      "Re",
+      "Re_k",
+      "Kn",
+      "Da",
+      "Ma"
+    ],
+    "With u": [
+      "None",
+      "None",
+      "None",
+      "None",
+      "None"
+    ],
+    "With u_Darcy": [
+      "None",
+      "None",
+      "None",
+      "None",
+      "None"
+    ]
+  },
+  "LB_WBS_parameters": {
+    "LB-WBS model": [
+      "O(eps3)",
+      "O(eps2)",
+      "O(eps1)",
+      "Selected"
+    ],
+    "s_v": [
+      "None",
+      "None",
+      "None",
+      "2"
+    ],
+    "alpha": [
+      "None",
+      "None",
+      "None",
+      "0"
+    ],
+    "s_j": [
+      "None",
+      "None",
+      "None",
+      "2"
+    ]
+  }
+}
