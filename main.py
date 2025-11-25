@@ -7,8 +7,8 @@ import utils
 
 
 #An exemple to compute LB-WBS scheme in heterogeneous permeable media
-NX=60
-NY=60
+NX=200
+NY=200
 
 
 # Adi
@@ -16,10 +16,10 @@ UX0=0
 UY0=0
 
 root_file = 'media_json/'
-path_json = ['test_pois2.json']
-             # 'medium_test6.json']
-             # 'medium_test6.json',
-             # 'medium_test6.json']
+path_json = ['medium_test4.json',
+             'medium_test3.json',
+             'medium_test6.json',
+             'medium_test6.json']
 
 path_json = [root_file + file_json for file_json in path_json]
 number_of_layers = len(path_json)
@@ -69,7 +69,6 @@ model = LB.PressureDependanceModel(THETA_FIELD=THETA_FIELD,
 
 # End pre-processing step
 
-ite_max=2000 #maximum of iteration
 
 model.initilisation(RHO0=RHO0, UX0=0, UY0=0) #initialization of the model
 
@@ -77,7 +76,7 @@ model.right_bc = 'No slip'
 model.left_bc = 'No slip'
 
 model.streaming_model ='WBS'
-model.maximum_of_iteration = 500000
+model.maximum_of_iteration = 2000
 
 model.run()
 
